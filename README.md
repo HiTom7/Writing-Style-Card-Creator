@@ -80,47 +80,7 @@ Using the style card, write a 30-second Reel script: hook in the first line, 3 s
 
 ---
 
-## 4. Deploy on home.pl (or any classic hosting)
-
-Yes — you can put the app on home.pl. GitHub does not push directly to home.pl; you **download from GitHub (or from this chat) and upload** to the server.
-
-### Option A – File manager in home.pl panel (easiest)
-
-1. Download `index.html` (from GitHub: raw file, or from Grok artifacts as `karta-stylu-kreator.html` renamed to `index.html`)
-2. Log in to **Panel home.pl** → **Hosting** → **Menedżer plików** (or FTP)
-3. Go to `public_html` (or the folder for your domain/subdomain)
-4. Upload `index.html`
-5. Open `https://twoja-domena.pl/` (or `/index.html`)
-
-### Option B – FTP (FileZilla, WinSCP, Cyberduck)
-
-1. In home.pl panel: create/get FTP login (host often `ftp.twoja-domena.pl`)
-2. Connect with FTP client
-3. Upload `index.html` into `public_html`
-4. Set permissions if needed (usually 644 for the file)
-
-### Option C – Git on the server (if SSH / git is available)
-
-On many shared home.pl plans there is **no** full git deploy. If you have SSH and git:
-
-```bash
-cd public_html
-git clone https://github.com/HiTom7/Writing-Style-Card-Creator.git .
-# ensure index.html is the full app file
-```
-
-Otherwise stick to A or B.
-
-### Notes for home.pl
-
-- No Node/build required — pure static HTML
-- Works on HTTP and HTTPS once the domain has SSL in the panel
-- For a subdomain: point subdomain to the same or another folder and put `index.html` there
-- Optional: add a short `README` or link from your main site: “Kreator karty stylu”
-
----
-
-## 5. Features
+## 4. Features
 
 - 13-step wizard (identity → main rule → 9 style dimensions → examples → export)
 - ~20 culturally adapted multi-select options per section, per language
