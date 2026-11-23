@@ -6969,6 +6969,8 @@ const STRATEGY_IDS = ['socratic','first_principles','steelman','heuristics','eri
 
     function setLang(lang) {
       if (!lang) return;
+      // Capture live text fields before re-rendering the current step in another language.
+      try { if (typeof saveCurrent === 'function') saveCurrent(); } catch (e) {}
       var requested = lang;
       var base = String(lang).split('-')[0];
       // Always allow switching — ensure i18n pack exists (clone en if missing)
@@ -7089,7 +7091,9 @@ const STRATEGY_IDS = ['socratic','first_principles','steelman','heuristics','eri
           state.custom[ta.getAttribute('data-sk')] = ta.value || '';
         });
         var goodInput = document.getElementById('f-good');
+        var badInput = document.getElementById('f-bad');
         if (goodInput) state.good = goodInput.value;
+        if (badInput) state.bad = badInput.value;
       }
       if (key === 'truth') {
         state.minWords = (document.getElementById('f-minw')||{}).value || '';
@@ -7364,6 +7368,8 @@ const STRATEGY_IDS = ['socratic','first_principles','steelman','heuristics','eri
         minWords: state.minWords, maxWords: state.maxWords, maxChars: state.maxChars,
         sources: state.sources, verification: state.verification, truthCustom: state.truthCustom,
         roleCustom: state.roleCustom, personaCustom: state.personaCustom, personaPick: state.personaPick,
+        roleTask: state.roleTask, roleTaskStrategies: setToArr(state.roleTaskStrategies),
+        roleExtras: Object.keys(state.roleExtras || {}).reduce(function(out, key) { out[key] = setToArr(state.roleExtras[key]); return out; }, {}),
         targetModel: state.targetModel, promptTemplate: state.promptTemplate, custom: state.custom,
         selected: sel,
         roles: setToArr(state.roles), channels: setToArr(state.channels), tones: setToArr(state.tones),
@@ -7383,6 +7389,9 @@ const STRATEGY_IDS = ['socratic','first_principles','steelman','heuristics','eri
       state.minWords = p.minWords || ''; state.maxWords = p.maxWords || ''; state.maxChars = p.maxChars || '';
       state.sources = p.sources || ''; state.verification = p.verification || ''; state.truthCustom = p.truthCustom || '';
       state.roleCustom = p.roleCustom || ''; state.personaCustom = p.personaCustom || ''; state.personaPick = p.personaPick || '';
+      state.roleTask = p.roleTask || ''; state.roleTaskStrategies = toSet(p.roleTaskStrategies);
+      state.roleExtras = {};
+      ROLE_IDS.forEach(function(role) { state.roleExtras[role] = toSet(p.roleExtras && p.roleExtras[role]); });
       state.targetModel = p.targetModel || ''; state.promptTemplate = p.promptTemplate !== false; state.custom = p.custom || {};
       state.selected = {};
       Object.keys(p.selected || {}).forEach(function(k){ state.selected[k] = toSet(p.selected[k]); });
@@ -7401,7 +7410,9 @@ const STRATEGY_IDS = ['socratic','first_principles','steelman','heuristics','eri
       try {
         var raw = localStorage.getItem('styleCardProfile');
         if (!raw) return false;
-        applyProfile(JSON.parse(raw));
+        var profile = JSON.parse(raw);
+        if (profile && profile.lang) setLang(profile.lang);
+        applyProfile(profile);
         return true;
       } catch (e) { return false; }
     }
@@ -7829,7 +7840,8 @@ const STRATEGY_IDS = ['socratic','first_principles','steelman','heuristics','eri
             '<p class="hint">'+escapeHtml(st.desc||'')+'</p><div class="chips">'+chipHtml+'</div>' +
             '<textarea class="style-custom" data-sk="'+sk+'" rows="2" placeholder="'+(tt.customLabel||'')+'">'+escapeHtml(state.custom[sk]||'')+'</textarea></details>';
         });
-        html += '<label class="field-label" style="margin-top:1rem">'+fl.examplesPh+'</label><textarea id="f-good" rows="2">'+escapeHtml(state.good||'')+'</textarea>';
+        html += '<label class="field-label" style="margin-top:1rem">'+(tt.labels.good||L().good||'Good examples (imitate)')+'</label><textarea id="f-good" rows="2">'+escapeHtml(state.good||'')+'</textarea>';
+        html += '<label class="field-label" style="margin-top:1rem">'+(tt.labels.bad||L().bad||'Anti-examples (avoid)')+'</label><textarea id="f-bad" rows="2">'+escapeHtml(state.bad||'')+'</textarea>';
         html += navHtml(true)+'</div>';
         main.innerHTML = html;
         document.querySelectorAll('.style-acc').forEach(function(d){

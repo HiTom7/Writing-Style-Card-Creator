@@ -83,6 +83,23 @@ Najważniejsze ryzyka jakościowe to nierówne pokrycie językowe, rozproszone �
 
 Nie było dostępnego Playwrighta ani zainstalowanej przeglądarki w środowisku, dlatego nie wykonano interaktywnego testu UI. Ustalenia wynikają z przeglądu kodu i kontroli składni. Szczególnie dalszej weryfikacji wymagają ścieżki: przełączanie trybu z każdego kroku, zapis i odczyt profilu, klikanie segmentów paska postępu, pobieranie każdego formatu oraz powrót z eksportu. Zmiany nie powinny być traktowane jako pełny test funkcjonalny.
 
+## Etapy 3–4 — eksport i przygotowanie lokalizacji (wykonane częściowo)
+
+### Eksport — przegląd i poprawki
+
+- Śledziłem dane od pól `state` do `buildMarkdown()`, `buildSystemPrompt()` i funkcji pobierania. Eksport zawiera warstwowe sekcje i czyta przykłady `good`/`bad`.
+- Wykryto, że aktualny krok `style` renderował pole dobrych przykładów, ale nie pole antyprzykładów, mimo że generator umiał je eksportować, a README obiecywało oba typy. Dodano pole antyprzykładów z lokalizowanymi etykietami i zapis wartości przy nawigacji.
+- Zmiana języka renderowała krok ponownie bez uprzedniego zapisania aktywnych pól tekstowych. Dodano zapis bieżącego kroku przed przełączeniem języka.
+- Zapis profilu nie obejmował wybranego zadania zawodowego i jego strategii; dodano te pola wraz z dodatkowymi regułami roli. Wczytanie profilu przywraca teraz także jego język.
+- Zasady, nagłówki warstw, testy stresowe i szablon promptu w eksporcie są w dużej mierze po angielsku nawet przy lokalnym UI. To może być celowe dla modeli, ale trzeba zdecydować i jasno pokazać, czy eksport ma być po angielsku, czy w języku interfejsu / wybranym języku pisania. W pełni nie rozwiązano tego w tym etapie.
+- Funkcjonalne testy pobranych plików, parsowania Markdown i odczytu profilu w przeglądarce nadal nie zostały wykonane. Nie deklaruję więc, że eksport jest w pełni zweryfikowany.
+
+### Przygotowanie lokalizacji
+
+- Za źródło prawdy należy uznać kody dostępne w `LANG_FLAG_META` i aliasy `LANG_ALIASES`, a nie liczbę wpisów w słowniku bazowym `i18n`. Selektor zawiera również wariant `en-US`; to odmiana ustawienia, nie odrębny pełny pakiet tłumaczeń.
+- `setLang()` klonuje pakiet bazowy (lub angielski), gdy pakiet docelowy nie istnieje, a `t()` / `L()` dokładają fallback z angielskiego. Zatem brak błędu nie oznacza kompletnej lokalizacji. Pokrycie trzeba raportować per zestaw danych (UI, flow, opcje, etykiety, komunikaty i eksport), nie tylko per język.
+- Przygotowano listę problemów i kierunek audytu, ale nie przeniesiono jeszcze wszystkich słowników do jednego katalogu ani nie dodano automatycznego walidatora kompletności. To pozostaje częścią właściwego etapu lokalizacyjnego.
+
 ## Walidacja wykonana
 
 - `node --check` na głównym skrypcie: bez błędów składni.
