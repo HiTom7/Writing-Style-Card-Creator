@@ -112,7 +112,7 @@ Przejrzano główne teksty interfejsu, kroki kreatora, krótkie etykiety trybu, 
 - poprawiono etykiety zawodów, m.in. „Influencer / creator” na „Twórca internetowy” i „Developer / technical writer” na „Programista / autor dokumentacji technicznej”;
 - poprawiono tekst trybu uproszczonego i komunikat przekroczenia limitu.
 
-To **pierwsza iteracja korekty**, nie kompletna certyfikowana korekta wszystkich polskich opcji. Aplikacja zawiera liczne oddzielne pakiety tekstowe, presetów i opcji. Pozostałe teksty, zwłaszcza rozbudowane listy stylów i strategii oraz zawartość eksportu, wymagają dalszego przeglądu w interfejsie. Polski prompt eksportowy nadal zawiera wiele angielskich nagłówków/instrukcji — to odrębna decyzja lokalizacyjna, którą należy rozstrzygnąć przed deklaracją pełnej lokalizacji.
+To **pierwsza iteracja korekty**, nie kompletna certyfikowana korekta wszystkich polskich opcji. Aplikacja zawiera liczne oddzielne pakiety tekstowe, presetów i opcji. Pozostałe teksty, zwłaszcza rozbudowane listy stylów i strategii, wymagają dalszego przeglądu w interfejsie. Nagłówki sześciu warstw, instrukcja systemowa, sekcje eksportu, komunikaty o źródłach i ograniczeniach oraz szablon polecenia są teraz zależne od wybranego języka interfejsu dla polskiego. Wybrane polskie opcje dotyczące wezwania do działania i marketingu oczyszczono też z części anglicyzmów. Pozostałe języki nadal używają angielskich fallbacków do czasu wykonania ich osobnych etapów. Wartość wpisana przez użytkownika pozostaje bez tłumaczenia.
 
 ## Walidacja wykonana
 
