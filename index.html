@@ -4853,6 +4853,9 @@ const STRATEGY_IDS = ['socratic','first_principles','steelman','heuristics','eri
         pyramid: 'Zasada piramidy: najpierw odpowiedź, potem uzasadnienie',
         problem_agitate_solve: 'Problem → zaostrzenie → rozwiązanie (oszczędnie)',
         yes_chain: 'Buduj zgodę krok po kroku (uczciwie)'
+      },
+      fr: {
+        socratic: 'Questions socratiques avant de conclure', first_principles: 'Raisonnement à partir des premiers principes', steelman: 'Présenter d’abord la meilleure version du point de vue opposé', heuristics: 'Nommer l’heuristique utilisée et ses limites', eristic_aware: 'Repérer les procédés éristiques sans recourir aux sophismes pour « gagner »', negotiation: 'Négociation : privilégier les intérêts aux positions', scqa: 'Structure SCQA (situation, complication, question, réponse)', pyramid: 'Principe de la pyramide : répondre d’abord, justifier ensuite', problem_agitate_solve: 'Problème → mise en évidence → solution (avec modération)', yes_chain: 'Construire l’accord étape par étape, avec honnêteté'
       }
 
       ,
@@ -4917,6 +4920,16 @@ const STRATEGY_IDS = ['socratic','first_principles','steelman','heuristics','eri
         specific_not_generic: 'Prefer concrete details over vague abstractions',
         no_delve: 'Ban stock LLM transitions and corporate-blog tone',
         human_imperfection: 'Sound human: occasional fragments OK; not brochure-perfect'
+      },
+      fr: {
+        no_ai_cliches: 'Évite les clichés de l’IA (« explorer en profondeur », « dans le monde trépidant d’aujourd’hui », « il est important de noter »)',
+        no_symmetrical: 'Évite les listes systématiquement en trois parties et les structures robotiques',
+        no_overhedge: 'Ne multiplie pas les précautions dans chaque phrase ; sois direct quand les faits le permettent',
+        no_filler_praise: 'Pas de flatterie creuse ni d’introduction générique du type « excellente question ! »',
+        vary_rhythm: 'Varie la longueur des phrases et autorise des formulations brèves et percutantes',
+        specific_not_generic: 'Préfère les détails concrets aux abstractions vagues',
+        no_delve: 'Évite les transitions toutes faites des LLM et le ton de blog d’entreprise',
+        human_imperfection: 'Garde une voix humaine : quelques phrases fragmentaires sont acceptables, sans perfection de brochure'
       },
       pl: {
         no_ai_cliches: 'Unikaj AI-klisz („delve”, „w dzisiejszym dynamicznym świecie”, „warto zauważyć”)',
@@ -5749,44 +5762,54 @@ const STRATEGY_IDS = ['socratic','first_principles','steelman','heuristics','eri
 
     const ROLE_PLAYBOOK = {
       lawyer: {
+        fr: { docs:['Réponse à une plainte','Requête au tribunal','Lettre au client','Note sur une clause contractuelle','Mise en demeure'], problems:['Faits ambigus','Sources juridiques contradictoires','Délais serrés'], style:['Terminologie précise ; définir les synonymes','Séparer faits, droit et conclusion','Pas de plaidoyer émotionnel sauf demande'] },
         en: { docs:['Complaint response','Motion / application to court','Client letter','Contract clause note','Demand letter'], problems:['Ambiguous facts','Conflicting authorities','Deadline pressure'], style:['Precise terms; no undefined synonyms','Separate facts / law / conclusion','No emotional advocacy unless instructed'] },
         pl: { docs:['Odpowiedź na pozew/skargę','Wniosek do sądu','Pismo do klienta','Nota do klauzuli umowy','Wezwanie do zapłaty'], problems:['Niejasne fakty','Sprzeczne orzecznictwo','Terminy'], style:['Precyzyjne terminy; bez synonimów bez definicji','Fakty / prawo / wniosek osobno','Bez emocji, chyba że zlecono'] },
         nl: { docs:['Reactie op klacht','Verzoekschrift','Cliëntenbrief','Contractclausule','Aanmaning'], problems:['Onduidelijke feiten','Tegenstrijdige bronnen','Termijnen'], style:['Precieze termen','Feiten / recht / conclusie scheiden','Geen emotie tenzij gevraagd'] },
         de: { docs:['Schriftsatz / Erwiderung','Antrag an Gericht','Mandantenschreiben','Klauselnotiz','Mahnung'], problems:['Unklare Fakten','Widersprüchliche Rechtsprechung','Fristen'], style:['Präzise Begriffe','Fakten / Recht / Schluss trennen','Keine Emotion ohne Auftrag'] }
       },
       journalist: {
+        fr: { docs:['Lancement d’article','Introduction de reportage','Questions d’entretien','Note de rectification'], problems:['Affirmations non vérifiées','Risque de source unique','Biais du titre'], style:['Faits avant interprétation','Attribuer les affirmations','Verbes neutres'] },
         en: { docs:['News lead','Feature intro','Interview questions','Correction note'], problems:['Unverified claims','Single-source risk','Headline bias'], style:['Facts before interpretation','Attribute claims','Neutral verbs'] },
         pl: { docs:['Lead newsowy','Wstęp reportażu','Pytania do wywiadu','Sprostowanie'], problems:['Niezweryfikowane twierdzenia','Jedno źródło','Tendencyjny tytuł'], style:['Fakty przed interpretacją','Atrybucja','Neutralne czasowniki'] }
       },
       economist: {
+        fr: { docs:['Note pour décideurs','Commentaire de graphique','Comparaison de scénarios'], problems:['Causalité exagérée','Données obsolètes','Hypothèses implicites'], style:['Définir les indicateurs','Énoncer les hypothèses','Distinguer prévision et fait'] },
         en: { docs:['Brief for decision-makers','Chart note','Scenario comparison'], problems:['Causal overclaim','Outdated data','Hidden assumptions'], style:['Define metrics','State assumptions','Separate forecast from fact'] },
         pl: { docs:['Brief dla decydentów','Opis wykresu','Porównanie scenariuszy'], problems:['Nadużycie przyczynowości','Nieaktualne dane','Ukryte założenia'], style:['Zdefiniuj metryki','Podaj założenia','Prognoza ≠ fakt'] }
       },
       teacher: {
+        fr: { docs:['Explication de cours','Série d’exercices','Retour à l’élève'], problems:['Trop abstrait','Pas de vérification de la compréhension'], style:['Du simple au complexe','Exemple puis règle','Poser une question de contrôle'] },
         en: { docs:['Lesson explanation','Exercise set','Feedback to student'], problems:['Too abstract','No check for understanding'], style:['Simple → complex','Example then rule','Ask a check question'] },
         pl: { docs:['Wyjaśnienie lekcji','Zestaw zadań','Informacja zwrotna'], problems:['Zbyt abstrakcyjnie','Brak sprawdzenia zrozumienia'], style:['Od prostego do złożonego','Przykład, potem reguła','Pytanie kontrolne'] }
       },
       school_student: {
+        fr: { docs:['Dissertation','Réponse courte','Compte rendu de lecture'], problems:['Hors sujet','Pas de thèse','Remplissage'], style:['Thèse claire','Phrases d’introduction des paragraphes','Respecter la limite de mots'] },
         en: { docs:['Essay','Short answer','Book report'], problems:['Off-topic','No thesis','Padding'], style:['Clear thesis','Topic sentences','Stay within word limit'] },
         pl: { docs:['Wypracowanie','Krótka odpowiedź','Omówienie lektury'], problems:['Off-topic','Brak tezy','Lanie wody'], style:['Jasna teza','Zdania wprowadzające akapit','Limit słów'] }
       },
       uni_student: {
+        fr: { docs:['Dissertation','Résumé de rapport de laboratoire','Intervention en séminaire'], problems:['Références faibles','Argument peu clair'], style:['Thèse → preuve → justification','Citer les sources','Définir les termes'] },
         en: { docs:['Essay','Lab report abstract','Seminar comment'], problems:['Weak citation','Unclear argument'], style:['Claim → evidence → warrant','Cite sources','Define terms'] },
         pl: { docs:['Esej','Abstrakt','Głos w seminarium'], problems:['Słabe cytowanie','Niejasny argument'], style:['Teza → dowody → uzasadnienie','Źródła','Definicje'] }
       },
       marketer: {
+        fr: { docs:['Section de page d’atterrissage','Étape de séquence e-mail','Variante publicitaire'], problems:['Bénéfice vague','Absence de preuve','Exagération'], style:['Une promesse','Preuve concrète','Appel à l’action clair'] },
         en: { docs:['Landing section','Email sequence step','Ad variant'], problems:['Vague benefit','No proof','Hype'], style:['One promise','Concrete proof','Clear CTA'] },
         pl: { docs:['Sekcja landing','Krok sekwencji e-mail','Wariant reklamy'], problems:['Mętna korzyść','Brak dowodu','Hype'], style:['Jedna obietnica','Konkretny dowód','Jasne wezwanie do działania'] }
       },
       developer: {
+        fr: { docs:['Description de pull request','Note API','Rapport de bogue','Étape de README'], problems:['Reproduction ambiguë','Versions manquantes'], style:['Noms exacts','Exemple minimal','Résultat attendu et obtenu'] },
         en: { docs:['PR description','API note','Bug report','README step'], problems:['Ambiguous repro','Missing versions'], style:['Exact names','Minimal example','Oczekiwany i rzeczywisty wynik'] },
         pl: { docs:['Opis PR','Nota API','Bug report','Krok README'], problems:['Niejasne repro','Brak wersji'], style:['Dokładne nazwy','Minimalny przykład odtwarzający problem','Oczekiwany i rzeczywisty wynik'] }
       },
       politician: {
+        fr: { docs:['Déclaration','Réplique de débat','Réponse en réunion publique'], problems:['Promesse excessive','Statistiques sans source'], style:['Position claire','Éléments probants','Désaccord respectueux'] },
         en: { docs:['Statement','Debate rebuttal','Town-hall answer'], problems:['Overpromise','Unsourced stats'], style:['Clear position','Evidence','Respectful disagreement'] },
         pl: { docs:['Oświadczenie','Replika debaty','Odpowiedź na spotkaniu'], problems:['Nadobietnice','Statystyki bez źródeł'], style:['Jasne stanowisko','Dowody','Szacunek w sporze'] }
       },
       influencer: {
+        fr: { docs:['Légende','Accroche de script','Séquence de story'], problems:['Exagération générique','Pas d’appel à l’action'], style:['Voix personnelle','Une accroche','Appel à l’action clair'] },
         en: { docs:['Caption','Script hook','Story frame'], problems:['Generic hype','No CTA'], style:['Personal voice','One hook','Clear CTA'] },
         pl: { docs:['Opis posta','Hook do skryptu','Klatka stories'], problems:['Generyczny hype','Brak CTA'], style:['Zachowuj własny sposób wypowiedzi','Jeden hook','Jasne wezwanie do działania'] }
       }
