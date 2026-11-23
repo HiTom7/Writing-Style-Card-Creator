@@ -1,92 +1,28 @@
 # Writing Style Card Creator
 
-Multilingual step-by-step writing style profiler for LLMs (EN · ES · PL · DE · FR · IT).
+A browser-based, multilingual writing-style profile and prompt-card builder. The complete application is in `index.html`; there is no build step or server-side data processing required. Open the file directly in a modern browser.
 
-Open `index.html` in any browser — no build step.
+## Create and export a card
 
----
+1. Open `index.html` and choose a language from the language picker.
+2. Work through the guided sections. Select suggested options and add your own notes where needed; the app includes role/audience, channel and tone, style dimensions, truth/boundary guidance, reusable templates and examples.
+3. Review the generated card and download it as Markdown for use as an LLM instruction/style guide.
 
-## 1. Create your style card
+The interface includes a simplified mode, theme and text-size controls, a progress indicator, and a preview/export area. The card is generated in the browser. Avoid entering sensitive information if you do not want it retained in your browser session/storage.
 
-1. Open `index.html`
-2. Pick language (flags at the top)
-3. Go through the steps: name, main rule, 9 style dimensions (multi-select + own text), good/bad examples
-4. Click **Download .md for LLM**
+## Language support
 
-You get a Markdown file, e.g. `style-card-yourname.md`.
+The interface contains language data for English, Polish, German, Spanish, French, Italian, Portuguese, Russian, Ukrainian, Indonesian, Korean, Turkish, Chinese, Japanese, Hindi, Arabic, Swedish, Norwegian, Danish, Finnish, Thai, Swahili, Vietnamese, Malay, Dutch, Czech and Romanian. Translation coverage varies by section: some content uses shared English fallback strings, so this list should not be read as a promise that every label and option has a complete native-language translation.
 
----
+## Using the exported Markdown
 
-## 2. How to use the .md file with an LLM
+Treat the downloaded file as a reusable style guide. Add it to the model's system/project instructions when supported, or paste it at the start of a conversation and then provide a concrete writing task. Model interfaces and instruction limits change; check the current product UI if a named setting is unavailable. The card guides style but cannot guarantee exact imitation or override a model's policies.
 
-The exported file is a **styleguide / system prompt**. The model should follow it when writing as you/your brand.
+## Privacy and external resources
 
-### ChatGPT (OpenAI)
+The profile and export are handled client-side by this single-page app. The language flags are loaded from FlagCDN when a network connection is available. The page also contains links to internetsafer.com. Review these external dependencies and links before deploying a modified copy under another domain.
 
-**Custom GPT / Project instructions**
-1. Create a GPT or open a Project
-2. Paste the full content of the `.md` into **Instructions** / **System prompt**
-3. Save
+## Project files
 
-**Single chat**
-1. Start a new chat
-2. First message: paste the whole `.md` and write e.g.  
-   `From now on, write all answers in this style. Confirm with one short sentence.`
-3. Next messages: give the task (post, thread, email, script…)
-
-### Claude (Anthropic)
-
-1. **Projects** → create project → **Project instructions** → paste the `.md`
-2. Or in a chat: paste the card first, then:  
-   `Apply this style guide to everything you write in this conversation.`
-
-### Grok (xAI)
-
-1. Paste the `.md` at the start of the chat, or put it in **Custom instructions** if available
-2. Add: `Always follow this writing style card.`
-
-### Gemini
-
-1. **Gems** / system instructions → paste the card  
-2. Or first message in the chat with the same instruction as above
-
-### Local models (Ollama, LM Studio, etc.)
-
-Put the `.md` content in the **system prompt** field of the chat UI or in the model’s system template.
-
----
-
-## 3. How to use it effectively
-
-| Do | Don’t |
-|----|--------|
-| Paste the **entire** card once at the start (or in system/instructions) | Paste only 1–2 lines — the model needs the full rules |
-| Give a **clear task** after the card: topic, length, channel (X / LinkedIn / email) | Assume the model “remembers” the style from last week |
-| Ask for 2–3 variants if you want choice | Mix this style with another style card in the same system prompt |
-| After a long chat, **re-paste** the card or start a new chat with it | Rely only on “write like me” without the card |
-| Keep good/bad example sentences in the card — they steer the model a lot | Leave the examples empty if you care about tone |
-
-**Example prompt after loading the card:**
-
-```text
-Using the style card above, write a short X (Twitter) post about testing the new model X vs Y on the same prompts. Include one concrete number. End with a question to the audience.
-```
-
-**For Instagram / Reels script:**
-
-```text
-Using the style card, write a 30-second Reel script: hook in the first line, 3 steps, show result first then how. CTA: comment KEYWORD for the prompt.
-```
-
----
-
-## 4. Features
-
-- 13-step wizard (identity → main rule → 9 style dimensions → examples → export)
-- ~20 culturally adapted multi-select options per section, per language
-- Free-text on every step
-- Exports Markdown ready as system prompt for any LLM
-
-### Languages
-
-🇬🇧 English · 🇪🇸 Español · 🇵🇱 Polski · 🇩🇪 Deutsch · 🇫🇷 Français · 🇮🇹 Italiano
+- `index.html` — application markup, styles, translations and JavaScript.
+- `AUDYT_PL.md` — implementation and localization review, known issues and recommended follow-up.

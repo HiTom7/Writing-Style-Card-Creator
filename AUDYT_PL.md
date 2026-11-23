@@ -1,0 +1,71 @@
+# Audyt aplikacji — tłumaczenia, struktura i użyteczność
+
+## Zakres i ograniczenia
+
+Audyt wykonano statycznie na dostarczonym pliku `index.html` (aplikacja jednoplikowa, ok. 1,14 MB i 13,4 tys. linii) oraz przez kontrolę składni osadzonego JavaScriptu (`node --check`, bez błędów). Nie uruchomiono testów przeglądarkowych ani testów z native speakerami; ocena językowa jest więc eksperckim przeglądem widocznych przykładów i architektury tłumaczeń, a nie pełną korektą każdej z dziesiątek tysięcy etykiet/opcji. Nie zmieniano wszystkich przekładów automatycznie, bo masowa podmiana bez kontekstu mogłaby wprowadzić nowe błędy.
+
+## Podsumowanie
+
+Do repozytorium przywrócono pełną aplikację z załączonego `index(11).html` zamiast wcześniejszej strony-placeholder. Aplikacja jest rozbudowanym kreatorem, nie prostym 13-krokowym formularzem opisanym przez poprzednią wersję README. Interfejs zawiera obszerną warstwę i18n, wiele sekcji/trybów oraz eksport. Składnia JavaScriptu przechodzi kontrolę.
+
+Najważniejsze ryzyka jakościowe to nierówne pokrycie językowe, rozproszone źródła tekstów (i18n, LOC, FLOW_LABELS, dodatkowe łatki) oraz brak gwarancji, że wszystkie widoczne treści są tłumaczone. Oprócz sześciu języków pierwotnie wymienionych w README picker i dane aplikacji obejmują liczne inne języki. Obecność języka w pickerze nie jest równoznaczna z pełną, zweryfikowaną lokalizacją.
+
+## Tłumaczenia — ustalenia
+
+### Architektura
+
+- Tłumaczenia są rozłożone na kilka słowników i dodatkowe bloki dopisujące/uzupełniające dane. To utrudnia znalezienie jednej prawdy o pokryciu, wykrywanie brakujących kluczy i review zmian.
+- Funkcja `L()` scala angielski pakiet bazowy z pakietem aktywnego języka. To użyteczny mechanizm awaryjny, ale brakujące tłumaczenie może po cichu wyświetlić angielski tekst w środku lokalnego interfejsu.
+- Lista wyboru języka, aliasy przeglądarkowe i dostępne tłumaczenia nie są tym samym zbiorem. Wartości wykrywania języka, m.in. `en-US`, wymagają szczególnego sprawdzenia w całym przepływie: wybranie, zapis, renderowanie i fallback.
+- Część tekstów jest dopisywana później przez rozbudowane mapy pakietów. W przyszłości należy zastąpić to pojedynczymi plikami JSON/JS na język z walidatorem kluczy.
+
+### Konkretne przykłady do poprawy
+
+- W polskich opisach sekcji występuje „fillery” (zapożyczenie z angielskiego); naturalniej: „wypełniacze”, ewentualnie „wtrącenia” zależnie od kontekstu.
+- W hiszpańskim widnieje konstrukcja „¿Cómo de largas…?”, która brzmi nienaturalnie w wielu odmianach. Lepsza, neutralna wersja: „¿Qué longitud suelen tener tus oraciones y párrafos?”.
+- W hiszpańskim „Lo que sueles no hacer” jest niezręczne. Lepsze: „Lo que normalmente evitas” / „Lo que sueles evitar”.
+- W opisach francuskich pominięcie rodzajników w „Comment vous utilisez exemples concrets, données et comparaisons” jest błędem; naturalniej: „Comment vous utilisez des exemples concrets, des données et des comparaisons”.
+- Warto rozstrzygnąć rejestr: część języków ma formę grzecznościową (francuskie „vous”, niemieckie „Sie”), część zwraca się bezpośrednio i nieformalnie (m.in. hiszpańskie „tus”, polskie „Twoje”). Konsekwencję należy utrzymać w całym kreatorze i eksportowanym dokumencie.
+- Są angielskie terminy produktowe („handle”, „tagline”, „fillers”, „boosters”, „anti-LLM”) w tłumaczonych tekstach. Nie wszystkie wymagają przekładu, ale powinny mieć ustalone lokalne odpowiedniki albo krótkie objaśnienie.
+- Zawartość użytkownika w eksporcie powinna pozostawać niezmieniona; teksty systemowe eksportu powinny natomiast mieć tę samą lokalizację i rejestr co UI.
+
+### Zalecenia lokalizacyjne
+
+1. Ustalić listę języków faktycznie wspieranych i oznaczyć poziom pokrycia; nie sugerować pełnej lokalizacji na podstawie samego wyboru języka.
+2. Ujednolicić słowniki, dodać skrypt porównujący klucze z bazowym językiem i raportujący braki oraz teksty nieużywane.
+3. Wykonać korektę native speakerów dla wszystkich widocznych treści, nazw opcji, podpowiedzi, walidacji, komunikatów, podsumowania i eksportu — osobno dla każdej odmiany/rejestru.
+4. Dodać testy przełączania języka w połowie pracy i eksportu w każdym języku; sprawdzić długie niemieckie/francuskie etykiety, polskie znaki oraz RTL dla arabskiego.
+
+## Struktura i użyteczność
+
+### Mocne strony
+
+- Jednoplikowa aplikacja nie wymaga instalacji ani procesu budowania; łatwo ją uruchomić lokalnie.
+- Kreator prowadzi użytkownika przez profilowanie, daje wybór gotowych opcji oraz pole na własne instrukcje.
+- Są widoczne funkcje ułatwiające korzystanie: pasek postępu, tryb uproszczony, regulacja rozmiaru tekstu, motyw jasny/ciemny i podgląd/eksport.
+- Wprowadzane wartości są kodowane przy wstawianiu do wielu pól HTML (`escapeHtml`/`escapeAttr`), co ogranicza ryzyko interpretacji danych jako markup w tych miejscach.
+
+### Problemy i ryzyka UX
+
+- Pojedynczy plik o rozmiarze ponad 1 MB i ponad 13 tys. linii łączy markup, CSS, bardzo duże dane tłumaczeń i logikę. Trudno go utrzymywać i testować; zalecany jest podział na moduły/słowniki, nawet jeśli dystrybucja nadal będzie mogła być spakowana do jednego HTML.
+- Rozbudowany formularz może być przytłaczający. Tryb uproszczony jest dobrym kierunkiem, ale należy mierzyć liczbę sekcji i opcji oraz jasno pokazywać, które pola są opcjonalne i ile czasu zwykle zajmuje przejście.
+- Dla dostępności trzeba zweryfikować klawiaturę i widoczny focus, semantykę przycisków/wyborów, powiązanie `label` z kontrolkami, komunikaty dla czytników ekranu i kontrast. Samo istnienie kontrolek skalowania tekstu nie zastępuje responsywnego layoutu ani WCAG.
+- Kontrolki motywu i skalowania mają angielskie `aria-label` w bazowym HTML; nie należy zakładać, że dynamicznie aktualizują się przy zmianie języka. To może pogorszyć obsługę przez czytnik ekranu w interfejsie lokalnym.
+- Picker używa obrazów flag z zewnętrznego `flagcdn.com`. Przy blokadzie sieci/treści obrazów może zabraknąć; flaga nie jest też dobrym jedynym oznaczeniem języka. Nazwa języka powinna być zawsze czytelna tekstowo.
+- Strona opisuje prywatność jako działanie w przeglądarce, ale ładuje zewnętrzne flagi i zawiera linki do domeny internetsafer.com. Komunikat o prywatności powinien precyzyjnie rozróżnić brak wysyłania profilu od połączeń do zewnętrznych zasobów.
+- Metadane SEO deklarują alternatywne adresy `hreflang` dla różnych języków, ale wszystkie prowadzą do jednego URL, podczas gdy samą lokalizację wybiera się w aplikacji. Dla rzeczywistych osobnych wersji językowych należałoby przygotować osobne adresy; jeśli ich nie ma, te alternatywy mogą być mylące.
+- Komunikat awaryjny po błędzie renderowania zastępuje część aplikacji minimalnym formularzem po angielsku. To ułatwia diagnostykę, ale użytkownik może stracić kontekst, a komunikat nie wyjaśnia, co zrobić poza odświeżeniem.
+
+## Priorytety dalszych prac
+
+**P0 — przed publikacją:** testy funkcjonalne przeglądarkowe: wybór języka, przechodzenie wstecz/dalej, przełączanie trybu, zachowanie danych, podgląd i poprawność pobranego Markdown; sprawdzenie mobile, RTL oraz dostępności klawiaturą. Upewnić się, że w wersji produkcyjnej nie ma nieaktualnych linków ani placeholderów.
+
+**P1 — jakość treści:** profesjonalna korekta wszystkich docelowych języków, ujednolicenie rejestru i terminologii; oznaczenie niepełnych języków i uczciwy fallback.
+
+**P2 — utrzymanie:** rozdzielenie danych tłumaczeń od kodu, automatyczny test kompletności kluczy, lintowanie i testy UI oraz dokumentacja procesu dodawania języka.
+
+## Walidacja wykonana
+
+- `node --check` na głównym skrypcie: bez błędów składni.
+- Przegląd statyczny HTML/JS oraz przykładowych wpisów tłumaczeń.
+- Nie wykonano testów w prawdziwej przeglądarce, audytu kontrastu ani pełnego review językowego native speakerów; powyższe należy traktować jako audyt statyczny i listę priorytetów, nie certyfikat dostępności ani kompletnej korekty.
