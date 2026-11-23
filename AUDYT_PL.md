@@ -100,6 +100,20 @@ Nie było dostępnego Playwrighta ani zainstalowanej przeglądarki w środowisku
 - `setLang()` klonuje pakiet bazowy (lub angielski), gdy pakiet docelowy nie istnieje, a `t()` / `L()` dokładają fallback z angielskiego. Zatem brak błędu nie oznacza kompletnej lokalizacji. Pokrycie trzeba raportować per zestaw danych (UI, flow, opcje, etykiety, komunikaty i eksport), nie tylko per język.
 - Przygotowano listę problemów i kierunek audytu, ale nie przeniesiono jeszcze wszystkich słowników do jednego katalogu ani nie dodano automatycznego walidatora kompletności. To pozostaje częścią właściwego etapu lokalizacyjnego.
 
+## Etap 5 — korekta języka polskiego (pierwsza iteracja)
+
+Przejrzano główne teksty interfejsu, kroki kreatora, krótkie etykiety trybu, komunikaty limitów, nazwy ról i część opisu eksportu. Wprowadzono poprawki m.in.:
+
+- usunięto niezręczne „Sprofiluj…” oraz mylące „LLM i AI”; komunikat tytułowy mówi teraz wprost o karcie stylu i modelu AI;
+- zastąpiono niepotrzebne kalki „system prompt / styleguide” opisem instrukcji dla modelu;
+- poprawiono „jak się z nim relacjonujesz” na „jaką relację z nim budujesz”;
+- zastąpiono „CTA” polskim „wezwanie do działania” w opisie kanału;
+- ujednolicono kilka terminów: „antyprzykłady”, „gotowy zestaw”, „podgląd i eksport”, „rzetelność i granice”;
+- poprawiono etykiety zawodów, m.in. „Influencer / creator” na „Twórca internetowy” i „Developer / technical writer” na „Programista / autor dokumentacji technicznej”;
+- poprawiono tekst trybu uproszczonego i komunikat przekroczenia limitu.
+
+To **pierwsza iteracja korekty**, nie kompletna certyfikowana korekta wszystkich polskich opcji. Aplikacja zawiera liczne oddzielne pakiety tekstowe, presetów i opcji. Pozostałe teksty, zwłaszcza rozbudowane listy stylów i strategii oraz zawartość eksportu, wymagają dalszego przeglądu w interfejsie. Polski prompt eksportowy nadal zawiera wiele angielskich nagłówków/instrukcji — to odrębna decyzja lokalizacyjna, którą należy rozstrzygnąć przed deklaracją pełnej lokalizacji.
+
 ## Walidacja wykonana
 
 - `node --check` na głównym skrypcie: bez błędów składni.
