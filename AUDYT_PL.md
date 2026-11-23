@@ -64,6 +64,25 @@ Najważniejsze ryzyka jakościowe to nierówne pokrycie językowe, rozproszone �
 
 **P2 — utrzymanie:** rozdzielenie danych tłumaczeń od kodu, automatyczny test kompletności kluczy, lintowanie i testy UI oraz dokumentacja procesu dodawania języka.
 
+## Etapy 1–2 — inwentaryzacja i przepływ (wykonane)
+
+### Mapa przepływu
+
+- Konfiguracja znajduje się w jednym HTML; aplikacja posiada tryb uproszczony (`who → start → where → truth → export`) oraz pełny (`who → start → where → style → truth → templates → tools → advanced → export`).
+- Dane wejściowe są trzymane w obiekcie `state`; część jest serializowana do `localStorage` jako profil. Theme, skala tekstu i ustawienie trybu uproszczonego zapisują osobne wartości.
+- Krok `export` buduje Markdown w podglądzie i udostępnia pobranie kilku formatów oraz zapis/odczyt profilu lokalnego.
+- Kluczowe punkty przepływu to `renderStep`, `saveCurrent`, `refreshStepKeys`, `toggleShortMode`, `buildMarkdown` i `download*`. Dołączony kod zawiera też pozostałości starszych kluczy kroków; wymaga to dalszego porządkowania i testów.
+
+### Problemy wykryte i poprawione
+
+1. **Zmiana trybu mogła przenieść użytkownika na inną sekcję.** Lista kroków zmienia się zależnie od trybu, ale bieżący indeks nie zawsze oznaczał ten sam krok. Zaktualizowano odświeżanie listy: zachowuje bieżący krok po kluczu, jeśli nadal istnieje, w przeciwnym razie ogranicza indeks do dostępnego zakresu. Przełączenie zapisuje aktualny formularz i ponownie renderuje aktualny krok.
+2. **Nie dało się wyczyścić wcześniej wpisanej nazwy, sloganu ani głównej reguły.** `saveCurrent()` używało operatora `||`, przez co pusty input zachowywał poprzednią wartość. Zapis teraz odzwierciedla pustą wartość, jeśli pole istnieje w DOM.
+3. **Nie dało się wyczyścić przykładu dobrego tekstu w kroku stylu.** Zastosowano analogiczną poprawkę: jeśli pole istnieje, zapisywana jest dokładnie jego wartość, także pusty tekst.
+
+### Ograniczenia sprawdzenia przepływu
+
+Nie było dostępnego Playwrighta ani zainstalowanej przeglądarki w środowisku, dlatego nie wykonano interaktywnego testu UI. Ustalenia wynikają z przeglądu kodu i kontroli składni. Szczególnie dalszej weryfikacji wymagają ścieżki: przełączanie trybu z każdego kroku, zapis i odczyt profilu, klikanie segmentów paska postępu, pobieranie każdego formatu oraz powrót z eksportu. Zmiany nie powinny być traktowane jako pełny test funkcjonalny.
+
 ## Walidacja wykonana
 
 - `node --check` na głównym skrypcie: bez błędów składni.

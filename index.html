@@ -6482,8 +6482,14 @@ const STRATEGY_IDS = ['socratic','first_principles','steelman','heuristics','eri
     STEP_KEYS_QUICK = ['who','start','where','truth','export'];
     STEP_KEYS = STEP_KEYS_FULL.slice(); // who first, then preset
     function refreshStepKeys() {
+      var oldKeys = (typeof STEP_KEYS !== 'undefined' && Array.isArray(STEP_KEYS)) ? STEP_KEYS : [];
+      var oldIndex = (typeof currentStep === 'number') ? currentStep : 0;
+      var oldKey = oldKeys[oldIndex];
       STEP_KEYS = (typeof shortMode !== 'undefined' && shortMode) ? STEP_KEYS_QUICK.slice() : STEP_KEYS_FULL.slice();
-      if (currentStep >= STEP_KEYS.length) currentStep = STEP_KEYS.length - 1;
+      var matchingIndex = oldKey ? STEP_KEYS.indexOf(oldKey) : -1;
+      // Keep the user on the same section when possible. If the current full-mode
+      // section is hidden in quick mode, move to the closest valid step, not export.
+      currentStep = matchingIndex >= 0 ? matchingIndex : Math.max(0, Math.min(oldIndex, STEP_KEYS.length - 1));
     };
     let currentLang = 'en';
     let shortMode = true;
@@ -6516,11 +6522,15 @@ const STRATEGY_IDS = ['socratic','first_principles','steelman','heuristics','eri
       return L[currentLang] || L.en;
     }
     function toggleShortMode(on) {
+      var wasShort = shortMode;
+      if (wasShort === !!on) return;
+      try { if (typeof saveCurrent === 'function') saveCurrent(); } catch (e) {}
       shortMode = !!on;
-      try { localStorage.setItem('styleCardShortMode', shortMode ? '1' : '0');
-        if (typeof refreshStepKeys === 'function') refreshStepKeys(); } catch(e) {}
+      try { localStorage.setItem('styleCardShortMode', shortMode ? '1' : '0'); } catch (e) {}
+      if (typeof refreshStepKeys === 'function') refreshStepKeys();
       updateShortModeUI();
       if (typeof updateCommercialUI === "function") updateCommercialUI();
+      if (typeof renderStep === 'function') renderStep();
     }
     function updateShortModeUI() {
       var lab = document.getElementById('shortModeLabel');
@@ -7057,16 +7067,18 @@ const STRATEGY_IDS = ['socratic','first_principles','steelman','heuristics','eri
     function saveCurrent() {
       const key = STEP_KEYS[currentStep];
       if (key === 'start' || key === 'who') {
-        state.name = (document.getElementById('f-name')||{}).value || state.name;
-        state.tagline = (document.getElementById('f-tagline')||{}).value || state.tagline;
-        if (document.getElementById('f-main')) state.mainRule = document.getElementById('f-main').value || state.mainRule;
+        var nameInput = document.getElementById('f-name');
+        var taglineInput = document.getElementById('f-tagline');
+        var mainInput = document.getElementById('f-main');
+        if (nameInput) state.name = nameInput.value;
+        if (taglineInput) state.tagline = taglineInput.value;
+        if (mainInput) state.mainRule = mainInput.value;
       }
       if (key === 'who') {
-        state.name = (document.getElementById('f-name')||{}).value || state.name;
-        state.tagline = (document.getElementById('f-tagline')||{}).value || '';
-        state.roleCustom = (document.getElementById('f-role-custom')||{}).value || '';
-        state.personaCustom = (document.getElementById('f-persona')||{}).value || state.personaCustom;
-        state.mainRule = (document.getElementById('f-main')||{}).value || state.mainRule;
+        var roleCustomInput = document.getElementById('f-role-custom');
+        var personaInput = document.getElementById('f-persona');
+        if (roleCustomInput) state.roleCustom = roleCustomInput.value;
+        if (personaInput) state.personaCustom = personaInput.value;
       }
       if (key === 'where') {
         var fr = document.getElementById('f-formality');
@@ -7076,7 +7088,8 @@ const STRATEGY_IDS = ['socratic','first_principles','steelman','heuristics','eri
         document.querySelectorAll('.style-custom').forEach(function(ta) {
           state.custom[ta.getAttribute('data-sk')] = ta.value || '';
         });
-        state.good = (document.getElementById('f-good')||{}).value || state.good;
+        var goodInput = document.getElementById('f-good');
+        if (goodInput) state.good = goodInput.value;
       }
       if (key === 'truth') {
         state.minWords = (document.getElementById('f-minw')||{}).value || '';
